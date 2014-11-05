@@ -19,6 +19,7 @@ foreach ($array as $type => $value) {
 	$filename = $MinifyX->config[$type.'Filename'] . '_';
 	$extension = $MinifyX->config[$type.'Ext'];
 	$register = $MinifyX->config['register'.ucfirst($type)];
+	$outputType = trim($MinifyX->config[$type.'OutputType']);
 	$placeholder = !empty($MinifyX->config[$type.'Placeholder'])
 		? $MinifyX->config[$type.'Placeholder']
 		: '';
@@ -36,10 +37,15 @@ foreach ($array as $type => $value) {
 	// Register file on frontend
 	if (!empty($file) && file_exists($MinifyX->config['cacheFolder'] . $file)) {
 		if ($register == 'placeholder' && $placeholder) {
-			$tag = $type == 'css'
-				? '<link rel="stylesheet" href="' . $cacheFolderUrl .  $file . '" type="text/css" />'
-				: '<script type="text/javascript" src="' . $cacheFolderUrl . $file . '"></script>';
-			$modx->setPlaceholder($placeholder, $tag);
+			if (!empty($outputType) && $outputType == 'string') {
+				$output = $cacheFolderUrl .  $file;
+			}
+			else {
+				$output = $type == 'css'
+					? '<link rel="stylesheet" href="' . $cacheFolderUrl .  $file . '" type="text/css" />'
+					: '<script type="text/javascript" src="' . $cacheFolderUrl . $file . '"></script>';
+			}
+			$modx->setPlaceholder($placeholder, $output);
 		}
 		else {
 			if ($type == 'css') {
