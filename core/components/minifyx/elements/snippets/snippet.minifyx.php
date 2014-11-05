@@ -41,7 +41,9 @@ foreach ($array as $type => $value) {
 				: '<script type="text/javascript" src="' . $cacheFolderUrl . $file . '"></script>';
 			$modx->setPlaceholder($placeholder, $tag);
 		}
-		else {
+		else if ($register == 'string') {
+			return $cacheFolderUrl . $file;
+		} else {
 			if ($type == 'css') {
 				$modx->regClientCSS($cacheFolderUrl . $file);
 			}
